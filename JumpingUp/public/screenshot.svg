@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="600" height="600" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <rect width="600" height="600" fill="url(#grad1)"/>
+
+  <!-- Mountains -->
+  <polygon points="120,480 240,240 360,480"
+           fill="#ffffff" opacity="0.3"/>
+  <polygon points="300,480 420,180 540,480"
+           fill="#ffffff" opacity="0.3"/>
+
+  <!-- Player (blue square) -->
+  <rect x="255" y="345" width="90" height="90"
+        fill="#4169E1" stroke="#000080" stroke-width="6"/>
+
+  <!-- Eyes -->
+  <rect x="276" y="378" width="13.2" height="13.2" fill="#FFFFFF"/>
+  <rect x="312" y="378" width="13.2" height="13.2" fill="#FFFFFF"/>
+
+  <!-- Arrow (jump indicator) -->
+  <line x1="300" y1="465" x2="300" y2="375"
+        stroke="#FFD700" stroke-width="9"/>
+  <polygon points="300,375 282,405 318,405"
+           fill="#FFD700"/>
+
+  
+  <!-- Title text -->
+  <text x="300" y="72" font-family="Arial, sans-serif" font-size="72"
+        font-weight="bold" fill="#ffffff" text-anchor="middle">JUMPING</text>
+  <text x="300" y="138" font-family="Arial, sans-serif" font-size="72"
+        font-weight="bold" fill="#ffffff" text-anchor="middle">UP</text>
+  
+</svg>

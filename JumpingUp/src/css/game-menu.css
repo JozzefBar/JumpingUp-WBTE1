@@ -1,0 +1,216 @@
+.game-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.game-menu {
+  background: rgba(26, 26, 46, 0.95);
+  border-radius: 15px;
+  padding: 30px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(232, 232, 232, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.game-menu .close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 30px;
+  cursor: pointer;
+  color: #b8b8c8;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+
+.game-menu .close-button:hover {
+  background: rgba(232, 232, 232, 0.1);
+  color: #e8e8e8;
+}
+
+.game-menu h2 {
+  margin: 0 0 20px 0;
+  color: #e8e8e8;
+  text-align: center;
+  font-size: 28px;
+  text-shadow: 0 0 20px rgba(232, 232, 232, 0.3);
+}
+
+.game-menu h3 {
+  color: #a8b8e8;
+  margin: 20px 0 10px 0;
+}
+
+.game-menu h4 {
+  color: #98a8d8;
+  margin: 15px 0 10px 0;
+}
+
+.game-menu .instruction-steps {
+  padding-left: 20px;
+  line-height: 1.8;
+}
+
+.game-menu .instruction-steps li {
+  margin: 10px 0;
+  color: #b8b8c8;
+}
+
+.game-menu .tips-list {
+  padding-left: 20px;
+  line-height: 1.8;
+}
+
+.game-menu .tips-list li {
+  margin: 8px 0;
+  color: #a8a8b8;
+}
+
+.game-menu .detailed-stats {
+  margin: 20px 0;
+}
+
+.game-menu .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+  margin: 15px 0;
+}
+
+.game-menu .stat-card {
+  background: linear-gradient(135deg, #16213e 0%, #0f1626 100%);
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  color: #e8e8e8;
+  border: 1px solid rgba(232, 232, 232, 0.1);
+}
+
+.game-menu .stat-number {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  text-shadow: 0 0 10px rgba(232, 232, 232, 0.3);
+}
+
+.game-menu .stat-description {
+  font-size: 12px;
+  opacity: 0.8;
+  color: #b8b8c8;
+}
+
+.game-menu .level-history {
+  margin-top: 20px;
+}
+
+.game-menu .history-table {
+  background: rgba(22, 33, 62, 0.5);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(232, 232, 232, 0.1);
+}
+
+.game-menu .history-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 10px;
+  padding: 10px 15px;
+  border-bottom: 1px solid rgba(232, 232, 232, 0.1);
+  color: #b8b8c8;
+}
+
+.game-menu .history-row.header {
+  background: rgba(22, 33, 62, 0.8);
+  color: #e8e8e8;
+  font-weight: bold;
+}
+
+.game-menu .history-row:last-child {
+  border-bottom: none;
+}
+
+.game-menu .menu-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.game-menu .btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  flex: 1;
+  min-width: 120px;
+}
+
+.game-menu .btn-primary {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: #e8e8e8;
+  border: 1px solid rgba(232, 232, 232, 0.2);
+}
+
+.game-menu .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  background: linear-gradient(135deg, #16213e 0%, #0f1626 100%);
+}
+
+.game-menu .btn-secondary {
+  background: rgba(232, 232, 232, 0.1);
+  color: #b8b8c8;
+  border: 1px solid rgba(232, 232, 232, 0.2);
+}
+
+.game-menu .btn-secondary:hover {
+  background: rgba(232, 232, 232, 0.2);
+  color: #e8e8e8;
+}
+
+@media (max-width: 768px) {
+  .game-menu {
+    padding: 20px;
+  }
+
+  .game-menu h2 {
+    font-size: 24px;
+  }
+
+  .game-menu .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .game-menu .menu-actions {
+    flex-direction: column;
+  }
+
+  .game-menu .btn {
+    width: 100%;
+  }
+}

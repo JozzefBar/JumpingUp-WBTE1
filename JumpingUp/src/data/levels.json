@@ -1,0 +1,81 @@
+{
+  "levels": [
+    {
+      "id": 1,
+      "name": "Začiatočnícka veža",
+      "difficulty": "easy",
+      "platforms": [
+        { "x": 80, "y": 625, "width": 330, "height": 20 },
+        { "x": 500, "y": 560, "width": 250, "height": 20 },
+        { "x": 160, "y": 475, "width": 300, "height": 20 },
+        { "x": 580, "y": 375, "width": 270, "height": 20 },
+        { "x": 250, "y": 275, "width": 230, "height": 20 },
+        { "x": 580, "y": 185, "width": 250, "height": 20 },
+        { "x": 330, "y": 100, "width": 300, "height": 20 }
+      ],
+      "goal": { "x": 420, "y": 35, "width": 130, "height": 50 },
+      "startPosition": { "x": 200, "y": 560 }
+    },
+    {
+      "id": 2,
+      "name": "Stredná výška",
+      "difficulty": "medium",
+      "platforms": [
+        { "x": 50, "y": 650, "width": 300, "height": 20 },
+        { "x": 580, "y": 600, "width": 230, "height": 20 },
+        { "x": 130, "y": 510, "width": 220, "height": 20 },
+        { "x": 500, "y": 435, "width": 200, "height": 20 },
+        { "x": 200, "y": 350, "width": 230, "height": 20 },
+        { "x": 580, "y": 260, "width": 220, "height": 20 },
+        { "x": 160, "y": 175, "width": 250, "height": 20 },
+        { "x": 530, "y": 100, "width": 230, "height": 20 }
+      ],
+      "goal": { "x": 600, "y": 35, "width": 130, "height": 50 },
+      "startPosition": { "x": 165, "y": 585 }
+    },
+    {
+      "id": 3,
+      "name": "Vysoká veža",
+      "difficulty": "hard",
+      "platforms": [
+        { "x": 665, "y": 675, "width": 270, "height": 20 },
+        { "x": 80, "y": 610, "width": 230, "height": 20 },
+        { "x": 580, "y": 535, "width": 220, "height": 20 },
+        { "x": 160, "y": 460, "width": 200, "height": 20 },
+        { "x": 630, "y": 385, "width": 180, "height": 20 },
+        { "x": 250, "y": 310, "width": 220, "height": 20 },
+        { "x": 615, "y": 235, "width": 200, "height": 20 },
+        { "x": 160, "y": 160, "width": 230, "height": 20 },
+        { "x": 580, "y": 85, "width": 220, "height": 20 }
+      ],
+      "goal": { "x": 630, "y": 25, "width": 130, "height": 50 },
+      "startPosition": { "x": 750, "y": 610 }
+    }
+  ],
+  "gameSettings": {
+    "canvasWidth": 1000,
+    "canvasHeight": 750,
+    "playerWidth": 24,
+    "playerHeight": 32,
+    "gravity": 0.5,
+    "maxJumpPower": 15,
+    "dragMultiplier": 0.08,
+    "maxDragDistance": 200
+  },
+  "instructions": {
+    "title": "Ako hrať Jumping Up",
+    "steps": [
+      "Klikni na panáčika a podržiac tlačidlo myši, potiahni v opačnom smere, kam chceš skočiť",
+      "Dĺžka a smer ťahania určia silu a smer skoku",
+      "Cieľom je dostať sa na vrchol veže na zelenú platformu",
+      "Dávaj pozor, aby si nespadol - potom začneš znova!",
+      "Počet pokusov a čas sa zaznamenávajú"
+    ],
+    "tips": [
+      "Pre kratšie skoky ťahaj menej",
+      "Pre vysoké skoky ťahaj dlhšie a viac dole",
+      "Skús predvídať trajektóriu skoku",
+      "Každý level je ťažší ako predchádzajúci"
+    ]
+  }
+}

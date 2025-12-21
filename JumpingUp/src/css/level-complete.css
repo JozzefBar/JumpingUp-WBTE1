@@ -1,0 +1,185 @@
+.level-complete-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.level-complete-card {
+  background: rgba(26, 26, 46, 0.95);
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  animation: slideUp 0.5s ease-out;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(232, 232, 232, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.level-complete-card .celebration {
+  font-size: 80px;
+  margin-bottom: 20px;
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.level-complete-card h2 {
+  color: #a8b8e8;
+  font-size: 36px;
+  margin: 0 0 10px 0;
+  text-shadow: 0 0 20px rgba(168, 184, 232, 0.3);
+}
+
+.level-complete-card .level-name {
+  color: #b8b8c8;
+  font-size: 18px;
+  margin: 0 0 30px 0;
+}
+
+.level-complete-card .completion-stats {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin: 30px 0;
+}
+
+.level-complete-card .stat {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.level-complete-card .stat-icon {
+  font-size: 40px;
+}
+
+.level-complete-card .stat-info {
+  text-align: left;
+}
+
+.level-complete-card .stat-label {
+  font-size: 14px;
+  color: #8b92a8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.level-complete-card .stat-value {
+  font-size: 28px;
+  font-weight: bold;
+  color: #e8e8e8;
+  text-shadow: 0 0 10px rgba(232, 232, 232, 0.3);
+}
+
+.level-complete-card .actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.level-complete-card .btn {
+  padding: 14px 28px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  flex: 1;
+  min-width: 130px;
+}
+
+.level-complete-card .btn-primary {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: #e8e8e8;
+  border: 1px solid rgba(232, 232, 232, 0.2);
+}
+
+.level-complete-card .btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+  background: linear-gradient(135deg, #16213e 0%, #0f1626 100%);
+}
+
+.level-complete-card .btn-secondary {
+  background: rgba(232, 232, 232, 0.1);
+  color: #b8b8c8;
+  border: 1px solid rgba(232, 232, 232, 0.2);
+}
+
+.level-complete-card .btn-secondary:hover {
+  background: rgba(232, 232, 232, 0.2);
+  color: #e8e8e8;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .level-complete-card {
+    padding: 30px 20px;
+  }
+
+  .level-complete-card .celebration {
+    font-size: 60px;
+  }
+
+  .level-complete-card h2 {
+    font-size: 28px;
+  }
+
+  .level-complete-card .completion-stats {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .level-complete-card .stat {
+    justify-content: center;
+  }
+
+  .level-complete-card .actions {
+    flex-direction: column;
+  }
+
+  .level-complete-card .btn {
+    width: 100%;
+  }
+}

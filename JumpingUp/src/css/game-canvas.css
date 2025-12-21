@@ -1,0 +1,19 @@
+.game-canvas-container {
+  position: relative;
+  display: inline-block;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+.game-canvas {
+  border: 2px solid rgba(232, 232, 232, 0.2);
+  border-radius: 8px;
+  cursor: grab;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  display: block;
+}
+
+.game-canvas:active {
+  cursor: grabbing;
+}
