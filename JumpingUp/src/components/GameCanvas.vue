@@ -27,6 +27,10 @@ const props = defineProps({
   settings: {
     type: Object,
     required: true
+  },
+  isPaused: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -183,6 +187,9 @@ function isClickOnPlayer(x, y) {
 }
 
 function startDrag(event) {
+  // Don't allow dragging when paused
+  if (props.isPaused) return
+
   const coords = getCanvasCoordinates(event.clientX, event.clientY)
 
   if (isClickOnPlayer(coords.x, coords.y) && !physics.isJumping.value) {
@@ -215,6 +222,9 @@ function endDrag(event) {
 }
 
 function startDragTouch(event) {
+  // Don't allow dragging when paused
+  if (props.isPaused) return
+
   const touch = event.touches[0]
   const coords = getCanvasCoordinates(touch.clientX, touch.clientY)
 
@@ -484,27 +494,30 @@ function draw() {
 }
 
 function gameLoop() {
-  // Update particles
-  updateParticles()
+  // Only update game state when not paused
+  if (!props.isPaused) {
+    // Update particles
+    updateParticles()
 
-  // Update physics
-  const status = physics.updatePhysics(props.level.platforms, canvasHeight.value)
+    // Update physics
+    const status = physics.updatePhysics(props.level.platforms, canvasHeight.value)
 
-  if (status === 'fell') {
-    emit('player-fell')
-    // Reset player to start position
-    physics.setPosition(props.level.startPosition.x, props.level.startPosition.y)
-    physics.startFalling()
+    if (status === 'fell') {
+      emit('player-fell')
+      // Reset player to start position
+      physics.setPosition(props.level.startPosition.x, props.level.startPosition.y)
+      physics.startFalling()
+    }
+
+    // Check goal collision
+    if (physics.checkGoalCollision(props.level.goal)) {
+      emit('goal-reached')
+      cancelAnimationFrame(animationFrame.value)
+      return
+    }
   }
 
-  // Check goal collision
-  if (physics.checkGoalCollision(props.level.goal)) {
-    emit('goal-reached')
-    cancelAnimationFrame(animationFrame.value)
-    return
-  }
-
-  // Draw
+  // Always draw (even when paused)
   draw()
 
   // Continue loop

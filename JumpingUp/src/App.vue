@@ -5,6 +5,7 @@
 
     <!-- Start Screen -->
     <div v-if="!gameStarted" class="start-screen">
+      <canvas ref="startCanvas" class="start-canvas"></canvas>
       <div class="start-content">
         <h1>🏔️ Jumping Up</h1>
         <p>Vyšplhaj sa na vrchol veže pomocou presných skokov.</p>
@@ -24,6 +25,7 @@
           ref="gameCanvas"
           :level="currentLevel"
           :settings="gameSettings"
+          :is-paused="isPaused"
           @goal-reached="handleGoalReached"
           @player-fell="handlePlayerFell"
           @jump="handleJump"
@@ -48,6 +50,16 @@
           <div class="hud-stat-line">Pokusy: {{ stats.deaths }}</div>
           <div class="hud-stat-line">Skoky: {{ stats.jumps }}</div>
           <div class="hud-stat-line">Čas: {{ formattedElapsedTime }}</div>
+        </div>
+
+        <!-- Bottom Right: Pause button -->
+        <div class="hud-corner bottom-right">
+          <button @click="togglePause" class="menu-button">{{ isPaused ? '▶' : '⏸' }}</button>
+        </div>
+
+        <!-- Pause Indicator -->
+        <div v-if="isPaused" class="pause-indicator">
+          <div class="pause-text">⏸ PAUZA</div>
         </div>
       </div>
     </div>
@@ -99,12 +111,18 @@ import levelsData from './data/levels.json'
 const gameStarted = ref(false)
 const showMenu = ref(false)
 const showLevelComplete = ref(false)
+const isPaused = ref(false)
 const currentLevelIndex = ref(0)
 const levelRestartKey = ref(0)
 const gameCanvas = ref(null)
+const startCanvas = ref(null)
 const completionStats = ref({ deaths: 0, jumps: 0, time: 0 })
 const completedLevelName = ref('')
 const hasSavedGame = ref(false)
+
+// Start screen particles
+const startParticles = ref([])
+let startAnimationFrame = null
 
 // Game data
 const levels = levelsData.levels
@@ -189,6 +207,10 @@ function toggleMenu() {
   showMenu.value = !showMenu.value
 }
 
+function togglePause() {
+  isPaused.value = !isPaused.value
+}
+
 function handleJump() {
   stats.recordJump()
 }
@@ -223,6 +245,72 @@ function handleMenuFromComplete() {
   showMenu.value = true
 }
 
+// Start screen particles
+function initStartParticles() {
+  if (!startCanvas.value) return
+
+  const canvas = startCanvas.value
+  canvas.width = window.innerWidth
+  canvas.height = window.innerHeight
+
+  startParticles.value = []
+  const numParticles = 40
+  for (let i = 0; i < numParticles; i++) {
+    startParticles.value.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      size: Math.random() * 2 + 1,
+      opacity: Math.random() * 0.3 + 0.1
+    })
+  }
+}
+
+function updateStartParticles() {
+  if (!startCanvas.value) return
+
+  const canvas = startCanvas.value
+  startParticles.value.forEach(particle => {
+    particle.x += particle.vx
+    particle.y += particle.vy
+
+    if (particle.x < 0) particle.x = canvas.width
+    if (particle.x > canvas.width) particle.x = 0
+    if (particle.y < 0) particle.y = canvas.height
+    if (particle.y > canvas.height) particle.y = 0
+  })
+}
+
+function drawStartParticles() {
+  if (!startCanvas.value) return
+
+  const canvas = startCanvas.value
+  const ctx = canvas.getContext('2d')
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+  startParticles.value.forEach(particle => {
+    ctx.fillStyle = `rgba(232, 232, 232, ${particle.opacity})`
+    ctx.beginPath()
+    ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
+    ctx.fill()
+  })
+}
+
+function startParticleLoop() {
+  updateStartParticles()
+  drawStartParticles()
+  startAnimationFrame = requestAnimationFrame(startParticleLoop)
+}
+
+function stopStartParticles() {
+  if (startAnimationFrame) {
+    cancelAnimationFrame(startAnimationFrame)
+    startAnimationFrame = null
+  }
+}
+
 // Watch for menu/level complete overlay and pause/resume timer
 watch(showMenu, (isOpen) => {
   if (gameStarted.value) {
@@ -240,10 +328,40 @@ watch(showLevelComplete, (isOpen) => {
   }
 })
 
+watch(isPaused, (paused) => {
+  if (gameStarted.value) {
+    if (paused) {
+      stats.pauseTimer()
+    } else {
+      stats.resumeTimer()
+    }
+  }
+})
+
+// Watch gameStarted to start/stop particles
+watch(gameStarted, (started) => {
+  if (started) {
+    stopStartParticles()
+  } else {
+    setTimeout(() => {
+      initStartParticles()
+      startParticleLoop()
+    }, 50)
+  }
+})
+
 // Register service worker for PWA
 onMounted(() => {
   // Check for saved game
   hasSavedGame.value = stats.hasSavedGame()
+
+  // Initialize start screen particles
+  if (!gameStarted.value) {
+    setTimeout(() => {
+      initStartParticles()
+      startParticleLoop()
+    }, 100)
+  }
 
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker
@@ -253,240 +371,11 @@ onMounted(() => {
   }
 })
 
-// Cleanup timer on unmount
+// Cleanup timer and particles on unmount
 onUnmounted(() => {
   stats.pauseTimer()
+  stopStartParticles()
 })
 </script>
 
 <style src="./css/main.css"></style>
-
-<style scoped>
-/* Fullscreen Game Layout */
-#app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-#app.game-active {
-  height: 100vh;
-  overflow: hidden;
-}
-
-/* Start Screen */
-.start-screen {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
-  padding: 20px;
-}
-
-.start-content {
-  text-align: center;
-  max-width: 600px;
-  background: rgba(26, 26, 46, 0.8);
-  padding: 60px 40px;
-  border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(232, 232, 232, 0.1);
-  backdrop-filter: blur(10px);
-}
-
-.start-content h1 {
-  font-size: 48px;
-  color: #e8e8e8;
-  margin-bottom: 20px;
-  text-shadow: 0 0 20px rgba(232, 232, 232, 0.3);
-}
-
-.start-content p {
-  font-size: 20px;
-  color: #b8b8c8;
-  margin-bottom: 40px;
-  line-height: 1.6;
-}
-
-/* Game Screen - Fullscreen */
-.game-screen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-}
-
-/* Canvas Wrapper - Fullscreen */
-.game-canvas-wrapper {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
-}
-
-/* HUD Overlay - Minimalist */
-.game-hud-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  z-index: 100;
-}
-
-.game-hud-overlay > * {
-  pointer-events: auto;
-}
-
-/* Corner positioning */
-.hud-corner {
-  position: absolute;
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 6px;
-  backdrop-filter: blur(3px);
-}
-
-.top-left {
-  top: 12px;
-  left: 12px;
-}
-
-.top-right {
-  top: 12px;
-  right: 12px;
-}
-
-.bottom-left {
-  bottom: 12px;
-  left: 12px;
-}
-
-.bottom-right {
-  bottom: 12px;
-  right: 12px;
-}
-
-/* HUD Text - Small and subtle */
-.hud-text {
-  font-size: 13px;
-  color: #4ade80;
-  font-weight: 600;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-  margin-bottom: 2px;
-}
-
-.hud-text-small {
-  font-size: 11px;
-  color: #e8e8e8;
-  font-weight: 500;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-}
-
-.hud-stat-line {
-  font-size: 12px;
-  color: #e8e8e8;
-  font-weight: 500;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-  margin: 2px 0;
-}
-
-/* Menu button - Small */
-.menu-button {
-  background: rgba(0, 0, 0, 0.4);
-  color: #e8e8e8;
-  border: 1px solid rgba(232, 232, 232, 0.2);
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 18px;
-  cursor: pointer;
-  transition: all 0.2s;
-  backdrop-filter: blur(3px);
-}
-
-.menu-button:hover {
-  background: rgba(0, 0, 0, 0.6);
-  border-color: rgba(232, 232, 232, 0.4);
-}
-
-/* Buttons */
-.btn {
-  padding: 14px 28px;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s;
-  margin: 5px;
-}
-
-.btn-large {
-  padding: 18px 36px;
-  font-size: 18px;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  color: white;
-  border: 1px solid rgba(232, 232, 232, 0.2);
-}
-
-.btn-primary:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
-  background: linear-gradient(135deg, #16213e 0%, #0f1626 100%);
-}
-
-.btn-secondary {
-  background: #f0f0f0;
-  color: #333;
-}
-
-.btn-secondary:hover {
-  background: #e0e0e0;
-  transform: translateY(-2px);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .hud-corner {
-    padding: 8px;
-  }
-
-  .hud-text {
-    font-size: 11px;
-  }
-
-  .hud-text-small {
-    font-size: 9px;
-  }
-
-  .hud-stat-line {
-    font-size: 10px;
-  }
-
-  .menu-button {
-    padding: 6px 10px;
-    font-size: 16px;
-  }
-
-  .start-content {
-    padding: 40px 30px;
-  }
-
-  .start-content h1 {
-    font-size: 36px;
-  }
-
-  .start-content p {
-    font-size: 16px;
-  }
-}
-</style>
