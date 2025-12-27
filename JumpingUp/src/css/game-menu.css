@@ -87,6 +87,81 @@
   color: #a8a8b8;
 }
 
+/* Level Selector */
+.game-menu .level-selector {
+  margin: 20px 0;
+}
+
+.game-menu .level-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 12px;
+  margin: 15px 0;
+}
+
+.game-menu .level-btn {
+  position: relative;
+  background: linear-gradient(135deg, #16213e 0%, #0f1626 100%);
+  border: 2px solid rgba(232, 232, 232, 0.2);
+  border-radius: 10px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: #e8e8e8;
+}
+
+.game-menu .level-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+  border-color: #4ade80;
+}
+
+.game-menu .level-btn.current {
+  border-color: #4ade80;
+  background: linear-gradient(135deg, #1a2e3e 0%, #16213e 100%);
+  box-shadow: 0 0 15px rgba(74, 222, 128, 0.3);
+}
+
+.game-menu .level-btn.completed {
+  border-color: #4ade80;
+}
+
+.game-menu .level-btn.locked {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: linear-gradient(135deg, #0a0a1e 0%, #0a0a1e 100%);
+  border-color: rgba(232, 232, 232, 0.1);
+}
+
+.game-menu .level-btn.locked:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: rgba(232, 232, 232, 0.1);
+}
+
+.game-menu .level-number {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.game-menu .level-check {
+  position: absolute;
+  top: 5px;
+  right: 8px;
+  font-size: 16px;
+  color: #4ade80;
+}
+
+.game-menu .level-lock {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 32px;
+  opacity: 0.6;
+}
+
 .game-menu .detailed-stats {
   margin: 20px 0;
 }

@@ -36,6 +36,18 @@ export function useResponsiveCanvas() {
         width: platform.width * scale.value.x,
         height: platform.height * scale.value.y
       })),
+      obstacles: level.obstacles ? level.obstacles.map(obstacle => ({
+        x: obstacle.x * scale.value.x,
+        y: obstacle.y * scale.value.y,
+        width: obstacle.width * scale.value.x,
+        height: obstacle.height * scale.value.y,
+        velocityX: obstacle.velocityX * scale.value.x,
+        velocityY: obstacle.velocityY * scale.value.y,
+        minX: obstacle.minX * scale.value.x,
+        maxX: obstacle.maxX * scale.value.x,
+        minY: obstacle.minY * scale.value.y,
+        maxY: obstacle.maxY * scale.value.y
+      })) : [],
       goal: {
         x: level.goal.x * scale.value.x,
         y: level.goal.y * scale.value.y,

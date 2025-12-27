@@ -73,6 +73,9 @@
       :show-resume="gameStarted && !showLevelComplete"
       :show-start="!gameStarted"
       :show-restart="gameStarted"
+      :show-level-selector="gameStarted"
+      :total-levels="levels.length"
+      :current-level="currentLevelIndex + 1"
       :instructions="instructions"
       :stats="stats.getStats()"
       :format-time="stats.formatTime"
@@ -80,6 +83,7 @@
       @start="startGame"
       @resume="showMenu = false"
       @restart="restartGame"
+      @select-level="goToLevel"
     />
 
     <!-- Level Complete Overlay -->
@@ -243,6 +247,19 @@ function goToNextLevel() {
 function handleMenuFromComplete() {
   showLevelComplete.value = false
   showMenu.value = true
+}
+
+function goToLevel(levelId) {
+  // levelId is 1-indexed, array is 0-indexed
+  currentLevelIndex.value = levelId - 1
+  showMenu.value = false
+  showLevelComplete.value = false
+  stats.startLevel(levelId)
+  setTimeout(() => {
+    if (gameCanvas.value) {
+      gameCanvas.value.resetPlayer()
+    }
+  }, 50)
 }
 
 // Start screen particles

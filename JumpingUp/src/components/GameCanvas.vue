@@ -54,6 +54,9 @@ const physics = useGamePhysics(props.settings)
 // Particle system for background
 const particles = ref([])
 
+// Obstacles system
+const obstacles = ref([])
+
 function initParticles() {
   // Check if canvas dimensions are available
   if (!canvasWidth.value || !canvasHeight.value) {
@@ -74,12 +77,34 @@ function initParticles() {
   }
 }
 
+function initObstacles() {
+  if (!props.level || !props.level.obstacles) {
+    obstacles.value = []
+    return
+  }
+
+  // Deep copy obstacles from level data
+  obstacles.value = props.level.obstacles.map(obs => ({
+    x: obs.x,
+    y: obs.y,
+    width: obs.width,
+    height: obs.height,
+    velocityX: obs.velocityX,
+    velocityY: obs.velocityY,
+    minX: obs.minX,
+    maxX: obs.maxX,
+    minY: obs.minY,
+    maxY: obs.maxY
+  }))
+}
+
 // Initialize player position
 watch(() => props.level, (newLevel) => {
   if (newLevel) {
     physics.setPosition(newLevel.startPosition.x, newLevel.startPosition.y)
     physics.startFalling()
     initParticles()
+    initObstacles()
   }
 }, { immediate: true })
 
@@ -96,6 +121,56 @@ function updateParticles() {
   })
 }
 
+function updateObstacles() {
+  obstacles.value.forEach(obstacle => {
+    // Update horizontal position
+    obstacle.x += obstacle.velocityX
+
+    // Bounce off horizontal boundaries
+    if (obstacle.x <= obstacle.minX || obstacle.x + obstacle.width >= obstacle.maxX) {
+      obstacle.velocityX *= -1
+      // Clamp to boundaries
+      obstacle.x = Math.max(obstacle.minX, Math.min(obstacle.x, obstacle.maxX - obstacle.width))
+    }
+
+    // Update vertical position
+    obstacle.y += obstacle.velocityY
+
+    // Bounce off vertical boundaries
+    if (obstacle.y <= obstacle.minY || obstacle.y + obstacle.height >= obstacle.maxY) {
+      obstacle.velocityY *= -1
+      // Clamp to boundaries
+      obstacle.y = Math.max(obstacle.minY, Math.min(obstacle.y, obstacle.maxY - obstacle.height))
+    }
+  })
+}
+
+function checkObstacleCollision() {
+  const playerLeft = physics.playerPosition.value.x
+  const playerRight = physics.playerPosition.value.x + props.settings.playerWidth
+  const playerTop = physics.playerPosition.value.y
+  const playerBottom = physics.playerPosition.value.y + props.settings.playerHeight
+
+  for (const obstacle of obstacles.value) {
+    const obstacleLeft = obstacle.x
+    const obstacleRight = obstacle.x + obstacle.width
+    const obstacleTop = obstacle.y
+    const obstacleBottom = obstacle.y + obstacle.height
+
+    // Check collision
+    if (
+      playerRight > obstacleLeft &&
+      playerLeft < obstacleRight &&
+      playerBottom > obstacleTop &&
+      playerTop < obstacleBottom
+    ) {
+      return true
+    }
+  }
+
+  return false
+}
+
 function drawParticles() {
   if (!particles.value || particles.value.length === 0) return
 
@@ -104,6 +179,42 @@ function drawParticles() {
     ctx.value.beginPath()
     ctx.value.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
     ctx.value.fill()
+  })
+}
+
+function drawObstacles() {
+  if (!obstacles.value || obstacles.value.length === 0) return
+
+  obstacles.value.forEach(obstacle => {
+    // Glowing danger effect
+    ctx.value.shadowBlur = 15
+    ctx.value.shadowColor = '#ef4444'
+
+    // Main obstacle body
+    ctx.value.fillStyle = '#dc2626'
+    ctx.value.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height)
+
+    // Inner glow
+    ctx.value.fillStyle = '#fca5a5'
+    ctx.value.fillRect(
+      obstacle.x + obstacle.width * 0.2,
+      obstacle.y + obstacle.height * 0.2,
+      obstacle.width * 0.6,
+      obstacle.height * 0.6
+    )
+
+    ctx.value.shadowBlur = 0
+
+    // Border
+    ctx.value.strokeStyle = '#991b1b'
+    ctx.value.lineWidth = 2
+    ctx.value.strokeRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height)
+
+    // Animated pulse effect (warning stripes)
+    const time = Date.now() / 200
+    const pulseOpacity = (Math.sin(time) + 1) / 2 * 0.3 + 0.2
+    ctx.value.fillStyle = `rgba(255, 255, 255, ${pulseOpacity})`
+    ctx.value.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height)
   })
 }
 
@@ -483,6 +594,9 @@ function draw() {
   // Draw platforms
   props.level.platforms.forEach(platform => drawPlatform(platform, '#3a3a4e'))
 
+  // Draw obstacles
+  drawObstacles()
+
   // Draw goal
   drawGoal(props.level.goal)
 
@@ -499,6 +613,9 @@ function gameLoop() {
     // Update particles
     updateParticles()
 
+    // Update obstacles
+    updateObstacles()
+
     // Update physics
     const status = physics.updatePhysics(props.level.platforms, canvasHeight.value)
 
@@ -507,6 +624,16 @@ function gameLoop() {
       // Reset player to start position
       physics.setPosition(props.level.startPosition.x, props.level.startPosition.y)
       physics.startFalling()
+      initObstacles() // Reset obstacles when player falls
+    }
+
+    // Check obstacle collision
+    if (checkObstacleCollision()) {
+      emit('player-fell')
+      // Reset player to start position
+      physics.setPosition(props.level.startPosition.x, props.level.startPosition.y)
+      physics.startFalling()
+      initObstacles() // Reset obstacles when hit
     }
 
     // Check goal collision
@@ -535,6 +662,7 @@ onMounted(() => {
   physics.setPosition(props.level.startPosition.x, props.level.startPosition.y)
   physics.startFalling()
   initParticles()
+  initObstacles()
   gameLoop()
 })
 

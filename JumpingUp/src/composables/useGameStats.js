@@ -33,7 +33,7 @@ export function useGameStats() {
 
   function startLevel(levelId) {
     currentLevel.value = levelId
-    deaths.value = 0
+    deaths.value = 1
     jumps.value = 0
     elapsedTime.value = 0
 
@@ -55,6 +55,7 @@ export function useGameStats() {
   function recordDeath() {
     deaths.value++
     totalDeaths.value++
+    jumps.value = 0  // Reset jumps on each death
     saveToLocalStorage()
   }
 
@@ -91,7 +92,7 @@ export function useGameStats() {
   }
 
   function resetLevel() {
-    deaths.value = 0
+    deaths.value = 1
     jumps.value = 0
     elapsedTime.value = 0
 
@@ -125,7 +126,7 @@ export function useGameStats() {
 
   function resetStats() {
     currentLevel.value = 1
-    deaths.value = 0
+    deaths.value = 1
     jumps.value = 0
     totalDeaths.value = 0
     totalJumps.value = 0

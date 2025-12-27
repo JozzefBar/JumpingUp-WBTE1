@@ -21,6 +21,29 @@
         </ul>
       </div>
 
+      <!-- Level Selector -->
+      <div v-if="showLevelSelector" class="level-selector">
+        <h3>Vyber level</h3>
+        <div class="level-grid">
+          <button
+            v-for="level in totalLevels"
+            :key="level"
+            @click="selectLevel(level)"
+            class="level-btn"
+            :class="{
+              'current': level === currentLevel,
+              'completed': isLevelCompleted(level),
+              'locked': isLevelLocked(level)
+            }"
+            :disabled="isLevelLocked(level)"
+          >
+            <div class="level-number">{{ level }}</div>
+            <div v-if="isLevelCompleted(level)" class="level-check">✓</div>
+            <div v-if="isLevelLocked(level)" class="level-lock">🔒</div>
+          </button>
+        </div>
+      </div>
+
       <div v-if="showStats && stats" class="detailed-stats">
         <h3>Štatistiky</h3>
         <div class="stats-grid">
@@ -107,6 +130,18 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  showLevelSelector: {
+    type: Boolean,
+    default: false
+  },
+  totalLevels: {
+    type: Number,
+    default: 3
+  },
+  currentLevel: {
+    type: Number,
+    default: 1
+  },
   instructions: {
     type: Object,
     required: true
@@ -121,7 +156,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['close', 'start', 'resume', 'restart'])
+const emit = defineEmits(['close', 'start', 'resume', 'restart', 'select-level'])
 
 function closeMenu() {
   emit('close')
@@ -137,6 +172,26 @@ function resumeGame() {
 
 function restartGame() {
   emit('restart')
+}
+
+function selectLevel(level) {
+  if (!isLevelLocked(level)) {
+    emit('select-level', level)
+  }
+}
+
+function isLevelCompleted(level) {
+  if (!props.stats || !props.stats.levelHistory) return false
+  return props.stats.levelHistory.some(l => l.levelId === level)
+}
+
+function isLevelLocked(level) {
+  // Level 1 is always unlocked
+  if (level === 1) return false
+
+  // Check if previous level is completed
+  const previousLevel = level - 1
+  return !isLevelCompleted(previousLevel)
 }
 </script>
 
