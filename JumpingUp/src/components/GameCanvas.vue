@@ -12,7 +12,6 @@
       @touchend.prevent="endDragTouch"
       class="game-canvas"
     ></canvas>
-    <div v-if="showAimLine" class="aim-indicator" :style="aimLineStyle"></div>
   </div>
 </template>
 
@@ -44,7 +43,6 @@ const canvasHeight = computed(() => props.settings.canvasHeight)
 const isDragging = ref(false)
 const dragStart = ref({ x: 0, y: 0 })
 const dragCurrent = ref({ x: 0, y: 0 })
-const showAimLine = ref(false)
 
 // Physics
 const physics = useGamePhysics(props.settings)
@@ -161,29 +159,6 @@ function drawStartFlag() {
   ctx.value.lineWidth = 1
   ctx.value.stroke()
 }
-
-const aimLineStyle = computed(() => {
-  if (!isDragging.value) return {}
-
-  const dx = dragCurrent.value.x - dragStart.value.x
-  const dy = dragCurrent.value.y - dragStart.value.y
-  const distance = Math.sqrt(dx * dx + dy * dy)
-  const angle = Math.atan2(dy, dx)
-
-  return {
-    position: 'absolute',
-    left: `${dragStart.value.x}px`,
-    top: `${dragStart.value.y}px`,
-    width: `${Math.min(distance, props.settings.maxDragDistance)}px`,
-    height: '2px',
-    backgroundColor: '#ff0000',
-    transformOrigin: '0 0',
-    transform: `rotate(${angle}rad)`,
-    pointerEvents: 'none',
-    zIndex: 10
-  }
-})
-
 function getCanvasCoordinates(clientX, clientY) {
   const rect = canvas.value.getBoundingClientRect()
   const scaleX = canvas.value.width / rect.width
@@ -214,7 +189,6 @@ function startDrag(event) {
     isDragging.value = true
     dragStart.value = coords
     dragCurrent.value = coords
-    showAimLine.value = true
   }
 }
 
@@ -237,7 +211,6 @@ function endDrag(event) {
     }
 
     isDragging.value = false
-    showAimLine.value = false
   }
 }
 
@@ -249,7 +222,6 @@ function startDragTouch(event) {
     isDragging.value = true
     dragStart.value = coords
     dragCurrent.value = coords
-    showAimLine.value = true
   }
 }
 
@@ -273,7 +245,6 @@ function endDragTouch(event) {
     }
 
     isDragging.value = false
-    showAimLine.value = false
   }
 }
 
@@ -294,9 +265,25 @@ function drawPlatform(platform, color = '#3a3a4e') {
 
 function drawPlayer() {
   const x = physics.playerPosition.value.x
-  const y = physics.playerPosition.value.y
+
+  // Calculate scale factors (base size is 16x32)
+  // Use square root for less aggressive scaling (player won't be huge on large screens)
+  const baseScaleX = props.settings.playerWidth / 16
+  const baseScaleY = props.settings.playerHeight / 32
+  const scaleX = Math.sqrt(baseScaleX)
+  const scaleY = Math.sqrt(baseScaleY)
+
+  // Use average scale for uniform appearance
+  const scale = (scaleX + scaleY) / 2
+
+  // Visual height based on the scale we're actually using for drawing
+  const visualHeight = 32 * scale
+  // Offset to align visual feet with collision box bottom
+  const yOffset = props.settings.playerHeight - visualHeight
+  const y = physics.playerPosition.value.y + yOffset
+
   const centerX = x + props.settings.playerWidth / 2
-  const centerY = y + props.settings.playerHeight / 2
+  const centerY = physics.playerPosition.value.y + props.settings.playerHeight / 2
 
   // Calculate rotation based on velocity
   let rotation = 0
@@ -324,63 +311,68 @@ function drawPlayer() {
   // Head
   ctx.value.fillStyle = '#f5deb3' // Skin tone
   ctx.value.beginPath()
-  ctx.value.arc(centerX, y + 6, 6, 0, Math.PI * 2)
+  ctx.value.arc(centerX, y + 6 * scale, 6 * scale, 0, Math.PI * 2)
   ctx.value.fill()
   ctx.value.strokeStyle = '#8b7355'
-  ctx.value.lineWidth = 1
+  ctx.value.lineWidth = 1 * scale
   ctx.value.stroke()
 
   // Body
   ctx.value.fillStyle = '#2a2a3e' // Dark clothing
-  ctx.value.fillRect(centerX - 5, y + 12, 10, 12)
+  ctx.value.fillRect(centerX - 5 * scale, y + 12 * scale, 10 * scale, 12 * scale)
   ctx.value.strokeStyle = '#1a1a2e'
-  ctx.value.lineWidth = 1
-  ctx.value.strokeRect(centerX - 5, y + 12, 10, 12)
+  ctx.value.lineWidth = 1 * scale
+  ctx.value.strokeRect(centerX - 5 * scale, y + 12 * scale, 10 * scale, 12 * scale)
 
   // Arms
   ctx.value.strokeStyle = '#f5deb3'
-  ctx.value.lineWidth = 2
+  ctx.value.lineWidth = 2 * scale
   ctx.value.lineCap = 'round'
 
   // Left arm
   ctx.value.beginPath()
-  ctx.value.moveTo(centerX - 5, y + 14)
-  ctx.value.lineTo(centerX - 9, y + 20)
+  ctx.value.moveTo(centerX - 5 * scale, y + 14 * scale)
+  ctx.value.lineTo(centerX - 9 * scale, y + 20 * scale)
   ctx.value.stroke()
 
   // Right arm
   ctx.value.beginPath()
-  ctx.value.moveTo(centerX + 5, y + 14)
-  ctx.value.lineTo(centerX + 9, y + 20)
+  ctx.value.moveTo(centerX + 5 * scale, y + 14 * scale)
+  ctx.value.lineTo(centerX + 9 * scale, y + 20 * scale)
   ctx.value.stroke()
 
   // Legs
   ctx.value.strokeStyle = '#2a2a3e'
-  ctx.value.lineWidth = 3
+  ctx.value.lineWidth = 3 * scale
 
   // Left leg
   ctx.value.beginPath()
-  ctx.value.moveTo(centerX - 2, y + 24)
-  ctx.value.lineTo(centerX - 6, y + 32)
+  ctx.value.moveTo(centerX - 2 * scale, y + 24 * scale)
+  ctx.value.lineTo(centerX - 6 * scale, y + 32 * scale)
   ctx.value.stroke()
 
   // Right leg
   ctx.value.beginPath()
-  ctx.value.moveTo(centerX + 2, y + 24)
-  ctx.value.lineTo(centerX + 6, y + 32)
+  ctx.value.moveTo(centerX + 2 * scale, y + 24 * scale)
+  ctx.value.lineTo(centerX + 6 * scale, y + 32 * scale)
   ctx.value.stroke()
 
   // Eyes
   ctx.value.fillStyle = '#000000'
-  ctx.value.fillRect(centerX - 3, y + 5, 2, 2)
-  ctx.value.fillRect(centerX + 1, y + 5, 2, 2)
+  ctx.value.fillRect(centerX - 3 * scale, y + 5 * scale, 2 * scale, 2 * scale)
+  ctx.value.fillRect(centerX + 1 * scale, y + 5 * scale, 2 * scale, 2 * scale)
 
   ctx.value.restore()
 }
 
 function drawGoal(goal) {
+  // Calculate scale factor based on goal width (base width is 130)
+  // Use square root for less aggressive scaling
+  const baseScale = goal.width / 130
+  const scale = Math.sqrt(baseScale)
+
   // Glowing goal area
-  ctx.value.shadowBlur = 20
+  ctx.value.shadowBlur = 20 * scale
   ctx.value.shadowColor = '#4ade80'
   ctx.value.fillStyle = '#22c55e'
   ctx.value.fillRect(goal.x, goal.y, goal.width, goal.height)
@@ -388,7 +380,7 @@ function drawGoal(goal) {
 
   // Goal border
   ctx.value.strokeStyle = '#16a34a'
-  ctx.value.lineWidth = 3
+  ctx.value.lineWidth = 3 * scale
   ctx.value.strokeRect(goal.x, goal.y, goal.width, goal.height)
 
   // Animated particles effect (simple dots)
@@ -397,7 +389,7 @@ function drawGoal(goal) {
     const dotX = goal.x + Math.random() * goal.width
     const dotY = goal.y + Math.random() * goal.height
     ctx.value.beginPath()
-    ctx.value.arc(dotX, dotY, 2, 0, Math.PI * 2)
+    ctx.value.arc(dotX, dotY, 2 * scale, 0, Math.PI * 2)
     ctx.value.fill()
   }
 }
@@ -412,17 +404,15 @@ function drawDragIndicator() {
     )
     const angle = Math.atan2(dy, dx)
 
-    // Draw arrow
-    ctx.value.strokeStyle = '#ef4444'
-    ctx.value.lineWidth = 3
-    ctx.value.shadowBlur = 10
-    ctx.value.shadowColor = '#ef4444'
-    ctx.value.beginPath()
-    ctx.value.moveTo(dragStart.value.x, dragStart.value.y)
-
     const endX = dragStart.value.x + Math.cos(angle) * distance
     const endY = dragStart.value.y + Math.sin(angle) * distance
 
+    // Draw clean arrow line (no shadow)
+    ctx.value.strokeStyle = '#ef4444'
+    ctx.value.lineWidth = 3
+    ctx.value.lineCap = 'round'
+    ctx.value.beginPath()
+    ctx.value.moveTo(dragStart.value.x, dragStart.value.y)
     ctx.value.lineTo(endX, endY)
     ctx.value.stroke()
 
@@ -442,11 +432,8 @@ function drawDragIndicator() {
     ctx.value.closePath()
     ctx.value.fill()
 
-    ctx.value.shadowBlur = 0
-
-    // Draw power indicator
-    const power = Math.min(distance * props.settings.dragMultiplier, props.settings.maxJumpPower)
-    const powerPercent = (power / props.settings.maxJumpPower) * 100
+    // Draw power indicator based on drag distance (0-100%)
+    const powerPercent = (distance / props.settings.maxDragDistance) * 100
 
     ctx.value.fillStyle = '#e8e8e8'
     ctx.value.font = 'bold 16px Arial'

@@ -14,6 +14,7 @@ export function useGamePhysics(settings) {
     const playerLeft = playerPosition.value.x
     const playerRight = playerPosition.value.x + settings.playerWidth
     const playerTop = playerPosition.value.y
+    const playerCenterX = playerPosition.value.x + settings.playerWidth / 2
 
     let onPlatform = false
 
@@ -23,8 +24,8 @@ export function useGamePhysics(settings) {
       const platformRight = platform.x + platform.width
       const platformTop = platform.y
 
-      // Check if player overlaps horizontally with platform
-      const horizontalOverlap = playerRight > platformLeft && playerLeft < platformRight
+      // Check if player's center is over the platform (more realistic landing)
+      const horizontalOverlap = playerCenterX > platformLeft && playerCenterX < platformRight
       // Check if player overlaps vertically with platform
       const verticalOverlap = playerBottom > platformTop && playerTop < platformBottom
 

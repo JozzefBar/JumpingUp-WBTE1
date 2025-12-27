@@ -51,19 +51,23 @@ export function useResponsiveCanvas() {
 
   // Function to scale game settings
   function scaleSettings(settings) {
-    // Use diagonal/magnitude scale for power scaling
-    // Large screens need significantly more power to maintain gameplay balance
-    const baseDragScale = Math.sqrt(scale.value.x * scale.value.x + scale.value.y * scale.value.y)
-    const dragScale = baseDragScale * 2.0  // Extra aggressive for very large screens
+    // Use larger scale dimension for consistent scaling
+    const maxScale = Math.max(scale.value.x, scale.value.y)
+    // Scale proportionally on all screen sizes (no minimum)
+    const powerScale = maxScale * 1.5
 
     return {
       ...settings,
       canvasWidth: canvasDimensions.value.width,
       canvasHeight: canvasDimensions.value.height,
+      // Scale player dimensions to match scaled platforms
       playerWidth: settings.playerWidth * scale.value.x,
       playerHeight: settings.playerHeight * scale.value.y,
-      maxDragDistance: settings.maxDragDistance * dragScale,
-      maxJumpPower: settings.maxJumpPower * dragScale,  // Scale max power!
+      // Scale gravity to maintain consistent physics across screen sizes
+      gravity: settings.gravity * scale.value.y,
+      // Both drag distance and power scale the same for consistent percentages
+      maxDragDistance: settings.maxDragDistance * powerScale,
+      maxJumpPower: settings.maxJumpPower * powerScale,
       dragMultiplier: settings.dragMultiplier  // Keep multiplier constant
     }
   }

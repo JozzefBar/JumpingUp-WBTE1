@@ -55,12 +55,12 @@
   "gameSettings": {
     "canvasWidth": 1000,
     "canvasHeight": 750,
-    "playerWidth": 24,
+    "playerWidth": 16,
     "playerHeight": 32,
     "gravity": 0.5,
     "maxJumpPower": 15,
     "dragMultiplier": 0.08,
-    "maxDragDistance": 200
+    "maxDragDistance": 150
   },
   "instructions": {
     "title": "Ako hrať Jumping Up",
