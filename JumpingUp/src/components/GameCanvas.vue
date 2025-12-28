@@ -1058,6 +1058,29 @@ function drawGoal(goal) {
     ctx.value.arc(dotX, dotY, 2 * scale, 0, Math.PI * 2)
     ctx.value.fill()
   }
+
+  // Add credit text for level 1 (below the goal)
+  if (props.level && props.level.id === 1) {
+    ctx.value.fillStyle = '#ffffff'
+    ctx.value.font = `${12 * scale}px "Segoe UI", sans-serif`
+    ctx.value.textAlign = 'center'
+    ctx.value.textBaseline = 'top'
+    ctx.value.shadowBlur = 3
+    ctx.value.shadowColor = 'rgba(0, 0, 0, 0.8)'
+    ctx.value.fillText(
+      'Created by:',
+      goal.x + goal.width + goal.width / 3,
+      goal.y + goal.height / 7
+    )
+    ctx.value.fillText(
+      'Jozef Barčák and Matúš Belan',
+      goal.x + goal.width + goal.width / 2 + goal.width / 7.8,
+      goal.y + goal.height / 2 + goal.height / 9
+    )
+    ctx.value.shadowBlur = 0
+    ctx.value.textAlign = 'start'
+    ctx.value.textBaseline = 'alphabetic'
+  }
 }
 
 function simulateTrajectory(startX, startY, velocityX, velocityY) {

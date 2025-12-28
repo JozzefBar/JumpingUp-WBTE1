@@ -6,15 +6,16 @@
       "difficulty": "easy",
       "platforms": [
         { "x": 10, "y": 625, "width": 330, "height": 20 },
-        { "x": 630, "y": 560, "width": 350, "height": 20 },
-        { "x": 40, "y": 475, "width": 350, "height": 20 },
-        { "x": 580, "y": 375, "width": 270, "height": 20 },
-        { "x": 250, "y": 275, "width": 230, "height": 20 },
-        { "x": 580, "y": 185, "width": 250, "height": 20 },
-        { "x": 390, "y": 100, "width": 190, "height": 20 }
+        { "x": 630, "y": 550, "width": 350, "height": 20 },
+        { "x": 40, "y": 475, "width": 330, "height": 20 },
+        { "x": 580, "y": 400, "width": 350, "height": 20 },
+        { "x": 70, "y": 325, "width": 330, "height": 20 },
+        { "x": 530, "y": 250, "width": 350, "height": 20 },
+        { "x": 100, "y": 175, "width": 330, "height": 20 },
+        { "x": 480, "y": 100, "width": 350, "height": 20 }
       ],
       "obstacles": [],
-      "goal": { "x": 420, "y": 35, "width": 130, "height": 50 },
+      "goal": { "x": 500, "y": 35, "width": 130, "height": 50 },
       "startPosition": { "x": 200, "y": 560 }
     },
     {
