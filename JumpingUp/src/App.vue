@@ -25,7 +25,7 @@
           ref="gameCanvas"
           :level="currentLevel"
           :settings="gameSettings"
-          :is-paused="isPaused"
+          :is-paused="isGamePaused"
           @goal-reached="handleGoalReached"
           @player-fell="handlePlayerFell"
           @jump="handleJump"
@@ -52,9 +52,12 @@
           <div class="hud-stat-line">Čas: {{ formattedElapsedTime }}</div>
         </div>
 
-        <!-- Bottom Right: Pause button -->
+        <!-- Bottom Right: Pause and Restart buttons -->
         <div class="hud-corner bottom-right">
-          <button @click="togglePause" class="menu-button">{{ isPaused ? '▶' : '⏸' }}</button>
+          <div class="button-group">
+            <button @click="togglePause" class="menu-button">{{ isPaused ? '▶' : '⏸' }}</button>
+            <button @click="restartLevel" class="menu-button menu-button-black">↻</button>
+          </div>
         </div>
 
         <!-- Pause Indicator -->
@@ -161,6 +164,9 @@ const formattedElapsedTime = computed(() => {
   // Priamo pristupuj k .value ako v menu
   return stats.formatTime(stats.elapsedTime.value || 0)
 })
+
+// Game is paused when isPaused is true OR menu is open
+const isGamePaused = computed(() => isPaused.value || showMenu.value)
 
 function startGame() {
   gameStarted.value = true

@@ -474,14 +474,13 @@
       "Dĺžka a smer ťahania určia silu a smer skoku",
       "Cieľom je dostať sa na vrchol veže na zelenú platformu",
       "Vyhýbaj sa červeným pohybujúcim sa prekážkam - ich dotyk znamená smrť!",
-      "Dávaj pozor, aby si nespadol - potom začneš znova!"
+      "Dávaj pozor, aby si nespadol - potom začneš znova!",
+      "Zbieraj zlaté kľúče na odomknutie dverí"
     ],
     "tips": [
-      "Pre kratšie skoky ťahaj menej",
-      "Pre vysoké skoky ťahaj dlhšie a viac dole",
-      "Sleduj pohyb prekážok a časuj svoje skoky",
-      "Skús predvídať trajektóriu skoku",
-      "Každý level je ťažší ako predchádzajúci"
+      "Každý level je ťažší ako predchádzajúci",
+      "Zober modrý orb - uvidíš presný smer a dĺžku svojho skoku!",
+      "Zlaté kľúče odomykajú dvere - určite sa oplatí ich zobrať"
     ]
   }
 }

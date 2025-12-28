@@ -1059,7 +1059,7 @@ function drawGoal(goal) {
     ctx.value.fill()
   }
 
-  // Add credit text for level 1 (below the goal)
+  // Add credit text for level 1
   if (props.level && props.level.id === 1) {
     ctx.value.fillStyle = '#10dfb2ff'
     ctx.value.textAlign = 'center'
@@ -1068,15 +1068,15 @@ function drawGoal(goal) {
     ctx.value.shadowColor = 'rgba(0, 0, 0, 0.8)'
 
     // "Created by:" text
-    ctx.value.font = `${12 * scale}px "Segoe UI", sans-serif`
+    ctx.value.font = `${10 * scale}px "Segoe UI", sans-serif`
     ctx.value.fillText(
       'Created by:',
-      goal.x + goal.width + goal.width / 3,
+      goal.x + goal.width + goal.width / 2 + goal.width / 4,
       goal.y + goal.height / 7
     )
 
     // Names with Satisfy font
-    ctx.value.font = `${16 * scale}px "Permanent Marker"`
+    ctx.value.font = `${12 * scale}px "Permanent Marker"`
     ctx.value.fillText(
       'Jozef Barčák & Matúš Belan',
       goal.x + goal.width + goal.width / 2 + goal.width / 4,
@@ -1161,18 +1161,25 @@ function drawDragIndicator() {
       })
     }
 
-    // Draw clean arrow line (no shadow)
-    ctx.value.strokeStyle = '#ef4444'
-    ctx.value.lineWidth = 3
+    // Draw subtle dashed arrow line with glow - moonlight white
+    ctx.value.shadowBlur = 10
+    ctx.value.shadowColor = 'rgba(255, 255, 255, 0.6)'
+    ctx.value.strokeStyle = 'rgba(255, 255, 255, 0.75)' // Moonlight white
+    ctx.value.lineWidth = 2.5
     ctx.value.lineCap = 'round'
+    ctx.value.setLineDash([8, 6]) // Dashed pattern: 8px line, 6px gap
     ctx.value.beginPath()
     ctx.value.moveTo(dragStart.value.x, dragStart.value.y)
     ctx.value.lineTo(endX, endY)
     ctx.value.stroke()
+    ctx.value.setLineDash([]) // Reset to solid for other drawings
+    ctx.value.shadowBlur = 0
 
-    // Draw arrow head
+    // Draw subtle arrow head - moonlight white
     const arrowSize = 10
-    ctx.value.fillStyle = '#ef4444'
+    ctx.value.fillStyle = 'rgba(255, 255, 255, 0.8)'
+    ctx.value.strokeStyle = 'rgba(255, 255, 255, 0.9)'
+    ctx.value.lineWidth = 1.5
     ctx.value.beginPath()
     ctx.value.moveTo(endX, endY)
     ctx.value.lineTo(
@@ -1185,6 +1192,7 @@ function drawDragIndicator() {
     )
     ctx.value.closePath()
     ctx.value.fill()
+    ctx.value.stroke()
 
     // Draw power indicator based on drag distance (0-100%)
     const powerPercent = (distance / props.settings.maxDragDistance) * 100
