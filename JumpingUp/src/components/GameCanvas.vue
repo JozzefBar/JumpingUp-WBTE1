@@ -54,6 +54,9 @@ const physics = useGamePhysics(props.settings)
 // Particle system for background
 const particles = ref([])
 
+// Goal particles (animated dots at finish)
+const goalParticles = ref([])
+
 // Obstacles system
 const obstacles = ref([])
 
@@ -87,6 +90,16 @@ function initParticles() {
       opacity: Math.random() * 0.5 + 0.3,
       rotation: Math.random() * Math.PI * 2,
       rotationSpeed: (Math.random() - 0.5) * 0.05
+    })
+  }
+}
+
+function initGoalParticles() {
+  goalParticles.value = []
+  for (let i = 0; i < 3; i++) {
+    goalParticles.value.push({
+      x: Math.random(),
+      y: Math.random()
     })
   }
 }
@@ -164,6 +177,7 @@ watch(() => props.level, (newLevel) => {
     physics.setPosition(newLevel.startPosition.x, newLevel.startPosition.y)
     physics.startFalling()
     initParticles()
+    initGoalParticles()
     initObstacles()
     initBarriers()
     initCollectibles()
@@ -194,6 +208,14 @@ function updateParticles() {
       particle.y = -10
       particle.x = Math.random() * canvasWidth.value
     }
+  })
+}
+
+function updateGoalParticles() {
+  // Generate new random positions for blinking effect
+  goalParticles.value.forEach(particle => {
+    particle.x = Math.random()
+    particle.y = Math.random()
   })
 }
 
@@ -1063,13 +1085,13 @@ function drawGoal(goal) {
 
   // Animated particles effect (simple dots)
   ctx.value.fillStyle = '#4ade80'
-  for (let i = 0; i < 3; i++) {
-    const dotX = goal.x + Math.random() * goal.width
-    const dotY = goal.y + Math.random() * goal.height
+  goalParticles.value.forEach(particle => {
+    const dotX = goal.x + particle.x * goal.width
+    const dotY = goal.y + particle.y * goal.height
     ctx.value.beginPath()
     ctx.value.arc(dotX, dotY, 2 * scale, 0, Math.PI * 2)
     ctx.value.fill()
-  }
+  })
 
   // Add credit text for level 1
   if (props.level && props.level.id === 1) {
@@ -1543,6 +1565,9 @@ function gameLoop() {
     // Update particles
     updateParticles()
 
+    // Update goal particles
+    updateGoalParticles()
+
     // Update obstacles
     updateObstacles()
 
@@ -1616,6 +1641,7 @@ onMounted(() => {
   physics.setPosition(props.level.startPosition.x, props.level.startPosition.y)
   physics.startFalling()
   initParticles()
+  initGoalParticles()
   initObstacles()
   initBarriers()
   initCollectibles()

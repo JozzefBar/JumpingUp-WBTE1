@@ -94,7 +94,7 @@
         <button v-if="showResume" @click="resumeGame" class="btn btn-primary">
           Pokračovať v hre
         </button>
-        <button v-if="showStart" @click="startGame" class="btn btn-primary">
+        <button v-if="showStart" @click="handleStartGame" class="btn btn-primary">
           Začať hru
         </button>
         <button v-if="showRestart" @click="restartGame" class="btn btn-secondary">
@@ -103,10 +103,33 @@
         <button @click="closeMenu" class="btn btn-secondary">Zavrieť</button>
       </div>
     </div>
+
+    <!-- Start Confirmation Dialog -->
+    <div v-if="showStartConfirmation" class="game-menu-overlay" @click="showStartConfirmation = false">
+      <div class="game-menu start-confirmation-dialog" @click.stop>
+        <h2>Uložená hra</h2>
+        <p style="margin: 1.5rem 0; text-align: center; color: #f5deb3;">
+          Máš uloženú rozohratú hru. Chceš pokračovať alebo začať odznova?
+        </p>
+        <div class="menu-actions">
+          <button @click="continueGame" class="btn btn-primary">
+            Pokračovať
+          </button>
+          <button @click="startGame" class="btn btn-secondary">
+            Začať novú hru
+          </button>
+          <button @click="showStartConfirmation = false" class="btn btn-secondary">
+            Zrušiť
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
+
 const props = defineProps({
   title: {
     type: String,
@@ -155,17 +178,40 @@ const props = defineProps({
   formatTime: {
     type: Function,
     required: true
+  },
+  hasSavedGame: {
+    type: Boolean,
+    default: false
   }
 })
 
-const emit = defineEmits(['close', 'start', 'resume', 'restart', 'select-level'])
+const emit = defineEmits(['close', 'start', 'resume', 'restart', 'select-level', 'continue-game'])
+
+const showStartConfirmation = ref(false)
 
 function closeMenu() {
   emit('close')
 }
 
+function handleStartGame() {
+  // Check if there's a saved game
+  if (props.hasSavedGame) {
+    // Show confirmation dialog
+    showStartConfirmation.value = true
+  } else {
+    // No saved game, just start new
+    emit('start')
+  }
+}
+
 function startGame() {
+  showStartConfirmation.value = false
   emit('start')
+}
+
+function continueGame() {
+  showStartConfirmation.value = false
+  emit('continue-game')
 }
 
 function resumeGame() {
