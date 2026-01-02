@@ -98,6 +98,7 @@
       v-if="showLevelComplete"
       :level-name="completedLevelName"
       :attempts="completionStats.deaths"
+      :jumps="completionStats.jumps"
       :time="completionStats.time"
       :has-next-level="hasNextLevel"
       :format-time="stats.formatTime"

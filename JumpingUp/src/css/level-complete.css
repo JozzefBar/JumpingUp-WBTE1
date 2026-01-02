@@ -23,20 +23,22 @@
 
 .level-complete-card {
   background: rgba(26, 26, 46, 0.95);
-  border-radius: 20px;
-  padding: 40px;
-  max-width: 500px;
+  border-radius: 1.25rem;
+  padding: 2.5rem;
+  max-width: 31.25rem;
   width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
   text-align: center;
   animation: slideUp 0.5s ease-out;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(232, 232, 232, 0.1);
-  backdrop-filter: blur(10px);
+  box-shadow: 0 1.25rem 3.75rem rgba(0, 0, 0, 0.5);
+  border: 0.0625rem solid rgba(232, 232, 232, 0.1);
+  backdrop-filter: blur(0.625rem);
 }
 
 @keyframes slideUp {
   from {
-    transform: translateY(50px);
+    transform: translateY(3.125rem);
     opacity: 0;
   }
   to {
@@ -46,8 +48,8 @@
 }
 
 .level-complete-card .celebration {
-  font-size: 80px;
-  margin-bottom: 20px;
+  font-size: 5rem;
+  margin-bottom: 1.25rem;
   animation: bounce 1s infinite;
 }
 
@@ -57,129 +59,211 @@
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-20px);
+    transform: translateY(-1.25rem);
   }
 }
 
 .level-complete-card h2 {
   color: #a8b8e8;
-  font-size: 36px;
-  margin: 0 0 10px 0;
-  text-shadow: 0 0 20px rgba(168, 184, 232, 0.3);
+  font-size: 2.25rem;
+  margin: 0 0 0.625rem 0;
+  text-shadow: 0 0 1.25rem rgba(168, 184, 232, 0.3);
 }
 
 .level-complete-card .level-name {
   color: #b8b8c8;
-  font-size: 18px;
-  margin: 0 0 30px 0;
+  font-size: 1.125rem;
+  margin: 0 0 1.875rem 0;
 }
 
 .level-complete-card .completion-stats {
   display: flex;
   justify-content: center;
-  gap: 40px;
-  margin: 30px 0;
+  gap: 1.5rem;
+  margin: 1.25rem 0;
 }
 
 .level-complete-card .stat {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 15px;
-}
-
-.level-complete-card .stat-icon {
-  font-size: 40px;
-}
-
-.level-complete-card .stat-info {
-  text-align: left;
+  gap: 0.375rem;
+  text-align: center;
 }
 
 .level-complete-card .stat-label {
-  font-size: 14px;
+  font-size: 0.75rem;
   color: #8b92a8;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.0625rem;
 }
 
 .level-complete-card .stat-value {
-  font-size: 28px;
+  font-size: 1.5rem;
   font-weight: bold;
   color: #e8e8e8;
-  text-shadow: 0 0 10px rgba(232, 232, 232, 0.3);
+  text-shadow: 0 0 0.625rem rgba(232, 232, 232, 0.3);
 }
 
 .level-complete-card .actions {
   display: flex;
-  gap: 10px;
-  margin-top: 30px;
+  gap: 0.625rem;
+  margin-top: 1.875rem;
   flex-wrap: wrap;
   justify-content: center;
 }
 
 .level-complete-card .btn {
-  padding: 14px 28px;
+  padding: 0.875rem 1.75rem;
   border: none;
-  border-radius: 10px;
-  font-size: 16px;
+  border-radius: 0.625rem;
+  font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s;
   flex: 1;
-  min-width: 130px;
+  min-width: 8.125rem;
 }
 
 .level-complete-card .btn-primary {
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   color: #e8e8e8;
-  border: 1px solid rgba(232, 232, 232, 0.2);
+  border: 0.0625rem solid rgba(232, 232, 232, 0.2);
 }
 
 .level-complete-card .btn-primary:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+  transform: translateY(-0.1875rem);
+  box-shadow: 0 0.375rem 1.25rem rgba(0, 0, 0, 0.6);
   background: linear-gradient(135deg, #16213e 0%, #0f1626 100%);
 }
 
 .level-complete-card .btn-secondary {
   background: rgba(232, 232, 232, 0.1);
   color: #b8b8c8;
-  border: 1px solid rgba(232, 232, 232, 0.2);
+  border: 0.0625rem solid rgba(232, 232, 232, 0.2);
 }
 
 .level-complete-card .btn-secondary:hover {
   background: rgba(232, 232, 232, 0.2);
   color: #e8e8e8;
-  transform: translateY(-2px);
+  transform: translateY(-0.125rem);
 }
 
 @media (max-width: 768px) {
   .level-complete-card {
-    padding: 30px 20px;
+    padding: 1.5rem 1rem;
+    max-width: 90%;
+    max-height: 92vh;
   }
 
   .level-complete-card .celebration {
-    font-size: 60px;
+    font-size: 3.5rem;
+    margin-bottom: 0.75rem;
   }
 
   .level-complete-card h2 {
-    font-size: 28px;
+    font-size: 1.625rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .level-complete-card .level-name {
+    font-size: 0.9375rem;
+    margin-bottom: 1.25rem;
   }
 
   .level-complete-card .completion-stats {
-    flex-direction: column;
-    gap: 20px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 1rem 0;
+    justify-content: center;
   }
 
   .level-complete-card .stat {
+    flex: 0 1 auto;
+    gap: 0.25rem;
+  }
+
+  .level-complete-card .stat-value {
+    font-size: 1.25rem;
+  }
+
+  .level-complete-card .stat-label {
+    font-size: 0.6875rem;
+  }
+
+  .level-complete-card .actions {
+    margin-top: 1.25rem;
+    gap: 0.5rem;
     justify-content: center;
+  }
+
+  .level-complete-card .btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .level-complete-card {
+    padding: 1rem 0.75rem;
+    max-width: 90%;
+    max-height: 94vh;
+    border-radius: 0.75rem;
+  }
+
+  .level-complete-card .celebration {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .level-complete-card h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.375rem;
+  }
+
+  .level-complete-card .level-name {
+    font-size: 0.8125rem;
+    margin-bottom: 0.875rem;
+  }
+
+  .level-complete-card .completion-stats {
+    gap: 0.75rem;
+    margin: 0.875rem 0;
+  }
+
+  .level-complete-card .stat {
+    gap: 0.25rem;
+  }
+
+  .level-complete-card .stat-value {
+    font-size: 1rem;
+  }
+
+  .level-complete-card .stat-label {
+    font-size: 0.625rem;
   }
 
   .level-complete-card .actions {
     flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+    gap: 0.375rem;
   }
 
   .level-complete-card .btn {
-    width: 100%;
+    width: 80%;
+    flex: none;
+    padding: 0.625rem 1rem;
+    font-size: 0.75rem;
+    border-radius: 0.5rem;
+  }
+}
+
+/* Hide level complete during print */
+@media print {
+  .level-complete-overlay {
+    display: none !important;
   }
 }

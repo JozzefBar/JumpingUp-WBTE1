@@ -7,18 +7,16 @@
 
       <div class="completion-stats">
         <div class="stat">
-          <div class="stat-icon">🎯</div>
-          <div class="stat-info">
-            <div class="stat-label">Pokusy</div>
-            <div class="stat-value">{{ attempts }}</div>
-          </div>
+          <div class="stat-label">Pokusy</div>
+          <div class="stat-value">{{ attempts }}</div>
         </div>
         <div class="stat">
-          <div class="stat-icon">⏱️</div>
-          <div class="stat-info">
-            <div class="stat-label">Čas</div>
-            <div class="stat-value">{{ formatTime(time) }}</div>
-          </div>
+          <div class="stat-label">Skoky</div>
+          <div class="stat-value">{{ jumps }}</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Čas</div>
+          <div class="stat-value">{{ formatTime(time) }}</div>
         </div>
       </div>
 
@@ -40,6 +38,10 @@ const props = defineProps({
     required: true
   },
   attempts: {
+    type: Number,
+    required: true
+  },
+  jumps: {
     type: Number,
     required: true
   },
