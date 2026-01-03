@@ -2,7 +2,7 @@
   "name": "Jumping Up - PWA Game",
   "short_name": "JumpingUp",
   "description": "Jumping game s drag and drop mechanikou - WEBTE1 záverečné zadanie",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "display_override": ["standalone", "fullscreen"],
   "background_color": "#667eea",
@@ -10,24 +10,24 @@
   "orientation": "landscape",
   "icons": [
     {
-      "src": "/icon-192.svg",
+      "src": "./icon-192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icon-512.svg",
+      "src": "./icon-512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     }
   ],
   "categories": ["games", "education"],
   "screenshots": [
     {
-      "src": "/screenshot.svg",
+      "src": "./screenshot.png",
       "sizes": "600x600",
-      "type": "image/svg+xml"
+      "type": "image/png"
     }
   ]
 }
