@@ -9,10 +9,15 @@
     "dragMultiplier": 0.08,
     "maxDragDistance": 150
   },
+  "gameInfo": {
+    "name": "Jumping Up",
+    "description": "Jumping Up je zábavná platformová hra, kde ovládaš ninjaakrobata snažiaceho sa vyšplhať na vrchol veže. Pomocou drag and drop technológie nastavuješ smer a silu každého skoku. Prekonaj všetky levely, vyhni sa nebezpečným prekážkam a dostaň sa na vrchol!",
+    "objective": "Dostať sa na zelenú cieľovú platformu na vrchole úrovne pomocou presne mierených skokov."
+  },
   "instructions": {
     "title": "Ako hrať Jumping Up",
     "steps": [
-      "Klikni na panáčika a podržiac tlačidlo myši, potiahni v opačnom smere, kam chceš skočiť",
+      "Klikni (alebo ťukni) na panáčika a potiahni v opačnom smere, kam chceš skočiť",
       "Dĺžka a smer ťahania určia silu a smer skoku",
       "Cieľom je dostať sa na vrchol veže na zelenú platformu",
       "Vyhýbaj sa pohybujúcim sa prekážkam - ich dotyk znamená smrť!",

@@ -104,6 +104,42 @@
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
+.game-menu .game-description {
+  margin: 1.25rem 0;
+  padding: 1rem;
+  background: rgba(107, 68, 35, 0.3);
+  border: 2px solid rgba(139, 115, 85, 0.4);
+  border-radius: 0;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.game-menu .description-text {
+  color: #f5deb3;
+  line-height: 1.75;
+  margin-bottom: 0.875rem;
+  font-size: 0.9375rem;
+  text-shadow:
+    1px 1px 2px rgba(0, 0, 0, 0.8),
+    0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.game-menu .objective-text {
+  color: #f5deb3;
+  line-height: 1.75;
+  margin: 0;
+  font-size: 0.875rem;
+  text-shadow:
+    1px 1px 2px rgba(0, 0, 0, 0.8),
+    0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.game-menu .objective-text strong {
+  color: #fbbf24;
+  text-shadow:
+    1px 1px 2px rgba(0, 0, 0, 0.8),
+    0 0 15px rgba(251, 191, 36, 0.3);
+}
+
 .game-menu .instruction-steps {
   padding-left: 1.25rem;
   line-height: 1.75;
@@ -390,6 +426,22 @@
     margin: 0.625rem 0 0.375rem 0;
   }
 
+  .game-menu .game-description {
+    margin: 0.875rem 0;
+    padding: 0.75rem;
+  }
+
+  .game-menu .description-text {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    margin-bottom: 0.625rem;
+  }
+
+  .game-menu .objective-text {
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
+
   .game-menu .instruction-steps {
     padding-left: 1rem;
     line-height: 1.5;
@@ -487,6 +539,22 @@
     padding: 0.875rem 0.625rem;
     max-width: 90%;
     border-width: 2px;
+  }
+
+  .game-menu .game-description {
+    margin: 0.625rem 0;
+    padding: 0.5rem;
+  }
+
+  .game-menu .description-text {
+    font-size: 0.6875rem;
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+  }
+
+  .game-menu .objective-text {
+    font-size: 0.625rem;
+    line-height: 1.4;
   }
 
   .game-menu .stat-card {

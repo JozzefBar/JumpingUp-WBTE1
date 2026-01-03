@@ -7,7 +7,7 @@
     <div v-if="!gameStarted" class="start-screen">
       <canvas ref="startCanvas" class="start-canvas"></canvas>
       <div class="start-content">
-        <h1>🏔️ Jumping Up</h1>
+        <h1>🏔️ {{ gameInfo.name }}</h1>
         <p>Vyšplhaj sa na vrchol veže pomocou presných skokov.</p>
         <button v-if="hasSavedGame" @click="continueGame" class="btn btn-large btn-primary">Pokračovať</button>
         <button @click="startGame" class="btn btn-large" :class="hasSavedGame ? 'btn-secondary' : 'btn-primary'">Začať novú hru</button>
@@ -82,6 +82,7 @@
       :total-levels="levels.length"
       :current-level="currentLevelIndex + 1"
       :instructions="instructions"
+      :game-info="gameInfo"
       :stats="stats.getStats()"
       :format-time="stats.formatTime"
       :has-saved-game="hasSavedGame"
@@ -109,8 +110,13 @@
 
     <!-- Print Section -->
     <div class="print-section">
-      <h1>🏔️ Jumping Up</h1>
-      
+      <h1>🏔️ {{ gameInfo.name }}</h1>
+
+      <div class="game-description-print">
+        <p class="description-text">{{ gameInfo.description }}</p>
+        <p class="objective-text"><strong>Cieľ:</strong> {{ gameInfo.objective }}</p>
+      </div>
+
       <h2>Ako hrať</h2>
       <div class="instructions">
         <ol>
@@ -171,7 +177,7 @@
       </template>
 
       <div class="footer">
-        <p>Jumping Up - PWA Hra</p>
+        <p>{{ gameInfo.name }} - PWA Hra</p>
         <p>Vytlačené: {{ new Date().toLocaleDateString('sk-SK') }}</p>
       </div>
     </div>
@@ -210,6 +216,7 @@ let startAnimationFrame = null
 const levels = levelsData.levels
 const baseGameSettings = settingsData.gameSettings
 const instructions = settingsData.instructions
+const gameInfo = settingsData.gameInfo
 
 // Stats
 const stats = useGameStats()
@@ -232,7 +239,7 @@ const hasNextLevel = computed(() => {
 })
 
 const menuTitle = computed(() => {
-  return gameStarted.value ? 'Menu' : 'Jumping Up'
+  return gameStarted.value ? 'Menu' : gameInfo.name
 })
 
 const formattedElapsedTime = computed(() => {

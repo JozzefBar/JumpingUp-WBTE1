@@ -5,6 +5,12 @@
 
       <h2>{{ title }}</h2>
 
+      <!-- Game Description -->
+      <div v-if="showInstructions && gameInfo" class="game-description">
+        <p class="description-text">{{ gameInfo.description }}</p>
+        <p class="objective-text"><strong>Cieľ:</strong> {{ gameInfo.objective }}</p>
+      </div>
+
       <div v-if="showInstructions" class="instructions">
         <h3>Ako hrať</h3>
         <ol class="instruction-steps">
@@ -170,6 +176,10 @@ const props = defineProps({
   instructions: {
     type: Object,
     required: true
+  },
+  gameInfo: {
+    type: Object,
+    default: null
   },
   stats: {
     type: Object,
