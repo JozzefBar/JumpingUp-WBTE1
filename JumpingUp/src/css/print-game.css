@@ -132,7 +132,7 @@
 
   .history-header {
     display: grid;
-    grid-template-columns: 0.6fr 1.8fr 0.8fr 0.8fr 1fr;
+    grid-template-columns: 0.6fr 1.8fr 0.8fr 0.8fr 1fr 0.8fr;
     gap: 6px;
     background: linear-gradient(135deg, #8b7355 0%, #6b4423 100%);
     color: #fbbf24;
@@ -142,7 +142,7 @@
 
   .history-row {
     display: grid;
-    grid-template-columns: 0.6fr 1.8fr 0.8fr 0.8fr 1fr;
+    grid-template-columns: 0.6fr 1.8fr 0.8fr 0.8fr 1fr 0.8fr;
     gap: 6px;
     padding: 4px 5px;
     border-top: 1px solid #ddd;

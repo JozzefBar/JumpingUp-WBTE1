@@ -202,6 +202,7 @@ watch(() => props.level, (newLevel) => {
     initCollectibles()
     initDoors()
     hasTrajectoryVision.value = false // Reset trajectory vision on level change
+    collectedCourageOrb.value = false // Reset courage orb tracking on level change
   }
 }, { immediate: true })
 
@@ -384,6 +385,11 @@ function checkCollectiblePickup() {
             c.collected = true
           }
         })
+      }
+
+      // If it's a courage orb, mark it as collected
+      if (item.type === 'courage_orb') {
+        collectedCourageOrb.value = true
       }
     }
   })
@@ -1741,7 +1747,7 @@ function gameLoop() {
 
     // Check goal collision
     if (physics.checkGoalCollision(props.level.goal)) {
-      emit('goal-reached')
+      emit('goal-reached', collectedCourageOrb.value)
       cancelAnimationFrame(animationFrame.value)
       return
     }

@@ -80,6 +80,7 @@
               <span>Pokusy</span>
               <span>Skoky</span>
               <span>Čas</span>
+              <span>Úspechy</span>
             </div>
             <div
               v-for="level in stats.levelHistory"
@@ -90,8 +91,8 @@
               <span>{{ level.name }}</span>
               <span>{{ level.deaths }}</span>
               <span>{{ level.jumps }}</span>
+              <span>{{ formatTime(level.time) }}</span>
               <span>
-                {{ formatTime(level.time) }}
                 <span v-if="isBestTime(level)" style="color: #fbbf24;">⭐</span>
                 <span v-if="level.collectedCourageOrb" style="color: #f97316;">🏆</span>
               </span>

@@ -68,7 +68,7 @@ export function useGameStats() {
     saveToLocalStorage()
   }
 
-  function completeLevel(levelName = '') {
+  function completeLevel(levelName = '', collectedCourageOrb = false) {
     const levelTime = Date.now() - currentLevelStartTime.value
 
     // Update elapsedTime to exact completion time before stopping timer
@@ -90,7 +90,8 @@ export function useGameStats() {
       deaths: deaths.value,
       jumps: jumps.value,
       time: levelTime,
-      completedAt: new Date().toISOString()
+      completedAt: new Date().toISOString(),
+      collectedCourageOrb: collectedCourageOrb
     })
 
     saveToLocalStorage()

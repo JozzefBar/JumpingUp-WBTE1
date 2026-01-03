@@ -183,13 +183,18 @@
             <div>Pokusy</div>
             <div>Skoky</div>
             <div>Čas</div>
+            <div>Úspechy</div>
           </div>
           <div v-for="(level, index) in stats.completedLevels.value" :key="index" class="history-row">
             <div>{{ level.levelId }}</div>
             <div>{{ level.name }}</div>
             <div>{{ level.deaths }}</div>
             <div>{{ level.jumps }}</div>
-            <div>{{ stats.formatTime(level.time) }} <span v-if="isBestTime(level)" style="color: #fbbf24;">🏆</span></div>
+            <div>{{ stats.formatTime(level.time) }}</div>
+            <div>
+              <span v-if="isBestTime(level)" style="color: #fbbf24;">⭐</span>
+              <span v-if="level.collectedCourageOrb" style="color: #f97316;">🏆</span>
+            </div>
           </div>
         </div>
       </template>
@@ -364,8 +369,8 @@ function handleDragEnd() {
   isDraggingPower.value = false
 }
 
-function handleGoalReached() {
-  const completion = stats.completeLevel(currentLevel.value.name)
+function handleGoalReached(collectedCourageOrb) {
+  const completion = stats.completeLevel(currentLevel.value.name, collectedCourageOrb)
   completionStats.value = completion
   completedLevelName.value = currentLevel.value.name
   showLevelComplete.value = true
