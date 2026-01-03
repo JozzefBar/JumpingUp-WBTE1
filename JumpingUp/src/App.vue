@@ -10,13 +10,31 @@
         <h1>🏔️ {{ gameInfo.name }}</h1>
         <p>Vyšplhaj sa na vrchol veže pomocou presných skokov.</p>
         <button v-if="hasSavedGame" @click="continueGame" class="btn btn-large btn-primary">Pokračovať</button>
-        <button @click="startGame" class="btn btn-large" :class="hasSavedGame ? 'btn-secondary' : 'btn-primary'">Začať novú hru</button>
+        <button @click="handleStartNewGame" class="btn btn-large" :class="hasSavedGame ? 'btn-secondary' : 'btn-primary'">Začať novú hru</button>
         <button @click="showMenu = true" class="btn btn-large btn-secondary">Návod</button>
       </div>
     </div>
 
+    <!-- Start Confirmation Dialog -->
+    <div v-if="!gameStarted && showStartConfirmation" class="game-menu-overlay" @click="showStartConfirmation = false">
+      <div class="game-menu start-confirmation-dialog" @click.stop>
+        <h2>Začať novú hru</h2>
+        <p style="margin: 1.5rem 0; text-align: center; color: #f5deb3;">
+          Naozaj chceš začať novú hru? Stratíš všetok svoj progress a štatistiky!
+        </p>
+        <div class="menu-actions">
+          <button @click="confirmStartGame" class="btn btn-primary">
+            Áno, začať novú hru
+          </button>
+          <button @click="showStartConfirmation = false" class="btn btn-secondary">
+            Zrušiť
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Game Screen (Fullscreen) -->
-    <div v-else class="game-screen">
+    <div v-if="gameStarted" class="game-screen">
       <!-- Game Canvas - Fullscreen -->
       <div class="game-canvas-wrapper">
         <GameCanvas
@@ -199,6 +217,7 @@ import settingsData from './data/settings.json'
 const gameStarted = ref(false)
 const showMenu = ref(false)
 const showLevelComplete = ref(false)
+const showStartConfirmation = ref(false)
 const isPaused = ref(false)
 const currentLevelIndex = ref(0)
 const levelRestartKey = ref(0)
@@ -252,6 +271,19 @@ const isGamePaused = computed(() => isPaused.value || showMenu.value)
 
 // Track dragging state
 const isDraggingPower = ref(false)
+
+function handleStartNewGame() {
+  if (hasSavedGame.value) {
+    showStartConfirmation.value = true
+  } else {
+    startGame()
+  }
+}
+
+function confirmStartGame() {
+  showStartConfirmation.value = false
+  startGame()
+}
 
 function startGame() {
   gameStarted.value = true

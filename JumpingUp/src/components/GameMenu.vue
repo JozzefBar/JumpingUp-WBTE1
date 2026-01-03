@@ -103,10 +103,10 @@
         <button v-if="showStart" @click="handleStartGame" class="btn btn-primary">
           Začať hru
         </button>
-        <button v-if="showRestart" @click="restartGame" class="btn btn-secondary">
+        <button v-if="showRestart" @click="handleRestartGame" class="btn btn-secondary">
           Reštartovať celú hru
         </button>
-        <button @click="closeMenu" class="btn btn-secondary">Zavrieť</button>
+        <button v-if="!showResume" @click="closeMenu" class="btn btn-secondary">Zavrieť</button>
       </div>
     </div>
 
@@ -125,6 +125,24 @@
             Začať novú hru
           </button>
           <button @click="showStartConfirmation = false" class="btn btn-secondary">
+            Zrušiť
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Restart Confirmation Dialog -->
+    <div v-if="showRestartConfirmation" class="game-menu-overlay" @click="showRestartConfirmation = false">
+      <div class="game-menu start-confirmation-dialog" @click.stop>
+        <h2>Reštartovať celú hru</h2>
+        <p style="margin: 1.5rem 0; text-align: center; color: #f5deb3;">
+          Naozaj chceš reštartovať celú hru? Stratíš všetok svoj progress a štatistiky!
+        </p>
+        <div class="menu-actions">
+          <button @click="confirmRestart" class="btn btn-primary">
+            Áno, reštartovať
+          </button>
+          <button @click="showRestartConfirmation = false" class="btn btn-secondary">
             Zrušiť
           </button>
         </div>
@@ -198,6 +216,7 @@ const props = defineProps({
 const emit = defineEmits(['close', 'start', 'resume', 'restart', 'select-level', 'continue-game'])
 
 const showStartConfirmation = ref(false)
+const showRestartConfirmation = ref(false)
 
 function closeMenu() {
   emit('close')
@@ -228,7 +247,13 @@ function resumeGame() {
   emit('resume')
 }
 
-function restartGame() {
+function handleRestartGame() {
+  // Always show confirmation for restart
+  showRestartConfirmation.value = true
+}
+
+function confirmRestart() {
+  showRestartConfirmation.value = false
   emit('restart')
 }
 
