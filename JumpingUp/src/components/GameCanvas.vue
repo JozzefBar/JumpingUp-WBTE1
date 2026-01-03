@@ -43,6 +43,19 @@ const animationFrame = ref(null)
 const canvasWidth = computed(() => props.settings.canvasWidth)
 const canvasHeight = computed(() => props.settings.canvasHeight)
 
+// Scale canvas for high-DPI displays
+const scaledCanvasWidth = computed(() => Math.floor(canvasWidth.value * dpr.value))
+const scaledCanvasHeight = computed(() => Math.floor(canvasHeight.value * dpr.value))
+
+// Responsive scale for game objects (smaller on mobile screens)
+// Base canvas width is 1000px, scale down objects when canvas is smaller
+const responsiveScale = computed(() => {
+  const baseWidth = 1000
+  const scale = canvasWidth.value / baseWidth
+  // Use square root for gentler scaling, clamp between 0.5 and 1.0
+  return Math.max(0.5, Math.min(1.0, Math.sqrt(scale)))
+})
+
 // Drag and drop state
 const isDragging = ref(false)
 const dragStart = ref({ x: 0, y: 0 })
@@ -557,53 +570,57 @@ function drawCollectibles() {
     if (item.collected) return
 
     if (item.type === 'key') {
+      const scale = responsiveScale.value
+
       // Glowing effect
-      ctx.value.shadowBlur = 20
+      ctx.value.shadowBlur = 20 * scale
       ctx.value.shadowColor = '#fbbf24'
 
       // Key body
       const time = Date.now() / 300
-      const bounce = Math.sin(time) * 3
+      const bounce = Math.sin(time) * 3 * scale
       const centerX = item.x + item.width / 2
       const centerY = item.y + item.height / 2 + bounce
 
       // Key shaft
       ctx.value.fillStyle = '#fbbf24'
-      ctx.value.fillRect(centerX - 2, centerY - 6, 4, 10)
+      ctx.value.fillRect(centerX - 2 * scale, centerY - 6 * scale, 4 * scale, 10 * scale)
 
       // Key head (circle)
       ctx.value.beginPath()
-      ctx.value.arc(centerX, centerY - 8, 5, 0, Math.PI * 2)
+      ctx.value.arc(centerX, centerY - 8 * scale, 5 * scale, 0, Math.PI * 2)
       ctx.value.fill()
 
       // Key teeth
-      ctx.value.fillRect(centerX + 2, centerY + 2, 3, 2)
-      ctx.value.fillRect(centerX + 2, centerY - 1, 3, 2)
+      ctx.value.fillRect(centerX + 2 * scale, centerY + 2 * scale, 3 * scale, 2 * scale)
+      ctx.value.fillRect(centerX + 2 * scale, centerY - 1 * scale, 3 * scale, 2 * scale)
 
       ctx.value.shadowBlur = 0
 
       // Border
       ctx.value.strokeStyle = '#f59e0b'
-      ctx.value.lineWidth = 1.5
+      ctx.value.lineWidth = 1.5 * scale
       ctx.value.beginPath()
-      ctx.value.arc(centerX, centerY - 8, 5, 0, Math.PI * 2)
+      ctx.value.arc(centerX, centerY - 8 * scale, 5 * scale, 0, Math.PI * 2)
       ctx.value.stroke()
     } else if (item.type === 'trajectory_orb') {
+      const scale = responsiveScale.value
+
       // Mystical glowing orb
       const time = Date.now() / 400
-      const bounce = Math.sin(time) * 4
+      const bounce = Math.sin(time) * 4 * scale
       const pulse = Math.sin(time * 2) * 0.3 + 0.7
       const centerX = item.x + item.width / 2
       const centerY = item.y + item.height / 2 + bounce
 
       // Outer glow
-      ctx.value.shadowBlur = 25 * pulse
+      ctx.value.shadowBlur = 25 * pulse * scale
       ctx.value.shadowColor = '#60a5fa'
 
       // Orb gradient
       const gradient = ctx.value.createRadialGradient(
         centerX, centerY, 0,
-        centerX, centerY, 12
+        centerX, centerY, 12 * scale
       )
       gradient.addColorStop(0, '#bfdbfe')
       gradient.addColorStop(0.5, '#60a5fa')
@@ -612,82 +629,22 @@ function drawCollectibles() {
       // Main orb
       ctx.value.fillStyle = gradient
       ctx.value.beginPath()
-      ctx.value.arc(centerX, centerY, 10 * pulse, 0, Math.PI * 2)
+      ctx.value.arc(centerX, centerY, 10 * pulse * scale, 0, Math.PI * 2)
       ctx.value.fill()
 
       // Inner sparkle
       ctx.value.fillStyle = 'rgba(255, 255, 255, 0.8)'
       ctx.value.beginPath()
-      ctx.value.arc(centerX - 3, centerY - 3, 2, 0, Math.PI * 2)
+      ctx.value.arc(centerX - 3 * scale, centerY - 3 * scale, 2 * scale, 0, Math.PI * 2)
       ctx.value.fill()
 
       ctx.value.shadowBlur = 0
 
       // Rotating ring effect
       ctx.value.strokeStyle = 'rgba(96, 165, 250, 0.5)'
-      ctx.value.lineWidth = 2
+      ctx.value.lineWidth = 2 * scale
       ctx.value.beginPath()
-      ctx.value.arc(centerX, centerY, 14, time, time + Math.PI)
-      ctx.value.stroke()
-    } else if (item.type === 'courage_orb') {
-      // Courage orb - orange trophy shape
-      const time = Date.now() / 400
-      const bounce = Math.sin(time) * 4
-      const pulse = Math.sin(time * 2) * 0.3 + 0.7
-      const centerX = item.x + item.width / 2
-      const centerY = item.y + item.height / 2 + bounce
-
-      // Outer glow
-      ctx.value.shadowBlur = 25 * pulse
-      ctx.value.shadowColor = '#f97316'
-
-      // Trophy gradient
-      const gradient = ctx.value.createRadialGradient(
-        centerX, centerY, 0,
-        centerX, centerY, 12
-      )
-      gradient.addColorStop(0, '#fed7aa')
-      gradient.addColorStop(0.5, '#fb923c')
-      gradient.addColorStop(1, '#f97316')
-
-      ctx.value.fillStyle = gradient
-
-      // Draw trophy cup
-      ctx.value.beginPath()
-      ctx.value.moveTo(centerX - 8, centerY - 4)
-      ctx.value.lineTo(centerX - 6, centerY + 4)
-      ctx.value.lineTo(centerX + 6, centerY + 4)
-      ctx.value.lineTo(centerX + 8, centerY - 4)
-      ctx.value.closePath()
-      ctx.value.fill()
-
-      // Trophy handles
-      ctx.value.strokeStyle = gradient
-      ctx.value.lineWidth = 2
-      ctx.value.beginPath()
-      ctx.value.arc(centerX - 10, centerY - 2, 3, 0, Math.PI * 2)
-      ctx.value.stroke()
-      ctx.value.beginPath()
-      ctx.value.arc(centerX + 10, centerY - 2, 3, 0, Math.PI * 2)
-      ctx.value.stroke()
-
-      // Trophy base
-      ctx.value.fillRect(centerX - 6, centerY + 4, 12, 2)
-      ctx.value.fillRect(centerX - 8, centerY + 6, 16, 2)
-
-      // Inner sparkle
-      ctx.value.fillStyle = 'rgba(255, 255, 255, 0.8)'
-      ctx.value.beginPath()
-      ctx.value.arc(centerX - 2, centerY - 2, 2, 0, Math.PI * 2)
-      ctx.value.fill()
-
-      ctx.value.shadowBlur = 0
-
-      // Rotating ring effect
-      ctx.value.strokeStyle = 'rgba(249, 115, 22, 0.5)'
-      ctx.value.lineWidth = 2
-      ctx.value.beginPath()
-      ctx.value.arc(centerX, centerY, 14, time, time + Math.PI)
+      ctx.value.arc(centerX, centerY, 14 * scale, time, time + Math.PI)
       ctx.value.stroke()
     }
   })
@@ -743,6 +700,8 @@ function drawDoors() {
     ctx.value.strokeRect(door.x, door.y, door.width, door.height)
 
     if (door.requiresKey) {
+      const scale = responsiveScale.value
+
       // Key symbol emblem on door
       const centerX = door.x + door.width / 2
       const centerY = door.y + door.height / 2
@@ -750,20 +709,20 @@ function drawDoors() {
       // Emblem circle background
       ctx.value.fillStyle = 'rgba(30, 30, 30, 0.6)'
       ctx.value.beginPath()
-      ctx.value.arc(centerX, centerY, 10, 0, Math.PI * 2)
+      ctx.value.arc(centerX, centerY, 10 * scale, 0, Math.PI * 2)
       ctx.value.fill()
 
       // Key icon
       ctx.value.fillStyle = '#fbbf24'
       // Key head
       ctx.value.beginPath()
-      ctx.value.arc(centerX, centerY - 3, 3, 0, Math.PI * 2)
+      ctx.value.arc(centerX, centerY - 3 * scale, 3 * scale, 0, Math.PI * 2)
       ctx.value.fill()
       // Key shaft
-      ctx.value.fillRect(centerX - 1, centerY, 2, 6)
+      ctx.value.fillRect(centerX - 1 * scale, centerY, 2 * scale, 6 * scale)
       // Key teeth
-      ctx.value.fillRect(centerX + 1, centerY + 4, 2, 1)
-      ctx.value.fillRect(centerX + 1, centerY + 2, 2, 1)
+      ctx.value.fillRect(centerX + 1 * scale, centerY + 4 * scale, 2 * scale, 1 * scale)
+      ctx.value.fillRect(centerX + 1 * scale, centerY + 2 * scale, 2 * scale, 1 * scale)
     }
   })
 }
@@ -796,16 +755,18 @@ function drawStartFlag() {
 
   if (!landingPlatform) return
 
+  const scale = responsiveScale.value
+
   // Position flag on the landing platform
   const flagX = props.level.startPosition.x + props.settings.playerWidth / 2
-  const flagY = landingPlatform.y - 30
-  const poleHeight = 25
-  const flagWidth = 15
-  const flagHeight = 10
+  const flagY = landingPlatform.y - 30 * scale
+  const poleHeight = 25 * scale
+  const flagWidth = 15 * scale
+  const flagHeight = 10 * scale
 
   // Flag pole
   ctx.value.strokeStyle = '#8b7355'
-  ctx.value.lineWidth = 2
+  ctx.value.lineWidth = 2 * scale
   ctx.value.beginPath()
   ctx.value.moveTo(flagX, flagY)
   ctx.value.lineTo(flagX, flagY + poleHeight)
@@ -821,7 +782,7 @@ function drawStartFlag() {
   ctx.value.fill()
 
   ctx.value.strokeStyle = '#22c55e'
-  ctx.value.lineWidth = 1
+  ctx.value.lineWidth = 1 * scale
   ctx.value.stroke()
 }
 function getCanvasCoordinates(clientX, clientY) {
