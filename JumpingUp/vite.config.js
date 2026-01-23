@@ -6,7 +6,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/JumpingUp-WEBTE1/',
+  base: '/JumpingUp-WEBTE1/JumpingUp/dist',
   plugins: [
     vue(),
     vueDevTools(),
